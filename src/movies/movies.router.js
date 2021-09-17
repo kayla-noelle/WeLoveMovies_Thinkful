@@ -3,28 +3,27 @@ const controller = require("./movies.controller");
 const methodNotAllowed = require("../errors/methodNotAllowed");
 
 router
-     .route("/")
-     .get(controller.list)
-     .all(methodNotAllowed);
-router
-     .route("/:movieId")
-     .get(controller.read)
-     .all(methodNotAllowed);
-router
-     .route("/moviesId/theaters")
-     .get(controller.read)
-     .all(methodNotAllowed);
+    .route("/")
+    .get(controller.list)
+    .all(methodNotAllowed);
 
 router
-     .route("/moviesId/reviews")
-     .get(controller.listReviews)
-     .all(metthodNotAllowed);
+    .route("/:movieId")
+    .get(controller.read)
+    .all(methodNotAllowed);
+
+router  
+    .route("/:movieId/theaters")
+    .get(controller.listTheatersForMovie)
+    .all(methodNotAllowed);
+
+router
+    .route("/:movieId/reviews")
+    .get(controller.listReviews)
+    .all(methodNotAllowed);
+
 
 module.exports = router;
 
 
 
-// - `GET /movies/:movieId`
-// - `GET /movies/:movieId` (incorrect ID)
-// - `GET /movies/:movieId/theaters`
-// - `GET /movies/:movieId/reviews`

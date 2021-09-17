@@ -1,2 +1,3 @@
 const service = require("./movies.service");
-const asyncErrorBoundary = ("./errors")
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+
