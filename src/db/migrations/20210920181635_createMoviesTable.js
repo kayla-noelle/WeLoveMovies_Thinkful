@@ -5,12 +5,12 @@ exports.up = function(knex) {
         table.string("title");
         table.integer("runtime_in_minutes");
         table.string("rating");
-        table.string("description", 1000);
-        table.string("image_url", 1000);
+        table.text("description");
+        table.text("image_url");
         table.timestamps(true, true);
-      });
+      }); 
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable("movies");
+    return knex.schema.dropTable("movies");  
 };
