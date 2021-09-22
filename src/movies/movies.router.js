@@ -1,35 +1,28 @@
-const router = require("express").Router();
+const router = require("express").Router({ mergeParams: true });
+const theatersRouter = require("../theaters/theaters.router");
+const reviewsRouter = require("../reviews/reviews.router");
 const controller = require("./movies.controller");
-const methodNotAllowed = require("../errors/methodNotAllowed");
+const methodNotAllowed = require("../Errors/methodNotAllowed");
 
-router.get('/', (req, res) => {
-    return res.send(controller.list);
-}).all(methodNotAllowed);
 
-router.get('/:movieId', (req, res) => {
-    return res.send(controller.read)
-}).all(methodNotAllowed);
+router.use(`/:movieId/theaters`, theatersRouter)
 
-router.get('/:movieId/theaters', (req, res) => {
-    return res.send(controller.listTheatersForMovie)
-}).all(methodNotAllowed);
+router.use(`/:movieId/reviews`, reviewsRouter)
 
-router.get('/:movieId/reviews', (req, res) => {
-    return res.send(controller.listReviews)
-}).all(methodNotAllowed);
+router
+    .route("/")
+        .get(controller.list)
+        .all(methodNotAllowed);
 
-// router  
-//     .route("/:movieId/theaters")
-//     .get(controller.listTheatersForMovie)
-//     .all(methodNotAllowed);
+router
+    .route("/:movieId")
+        .get(controller.read)
+        .all(methodNotAllowed);
 
-// router
-//     .route("/:movieId/reviews")
-//     .get(controller.listReviews)
-//     .all(methodNotAllowed);
+
+    
 
 
 module.exports = router;
-
 
 

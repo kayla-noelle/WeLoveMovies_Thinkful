@@ -1,25 +1,24 @@
-const service = require("./theaters.service");
-const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const knex = require("../db/connection");
+const reduceProperties = require("../utils/reduce-properties");
 
-async function readMoviesByTheaterId(req, res) {
-  const theater_id = req.params.theater_id;
-  const data = await service.readMoviesByTheaterId(theater_id);
-  res.json({ data });
-}
+const reduceMovies = reduceProperties("theater_id", {
+  movie_id: ["movies", null, "movie_id"],
+  title: ["movies", null, "title"],
+  runtime_in_minutes: ["movies", null, "runtime_in_minutes"],
+  rating: ["movies", null, "rating"],
+  description: ["movies", null, "description"],
+  image_url: ["movies", null, "image_url"],
+  is_showing: ["movies", null, "is_showing"],
+});
 
-async function list(req, res) {
-  const theaters = await service.list();
-  const data = await Promise.all(
-    theaters.map(async (theater) => {
-      const movies = await service.readMoviesByTheaterId(theater.theater_id);
-      theater.movies = movies;
-      return theater;
-    })
-  );
-  res.json({ data });
+function list() {
+  return knex("theaters")
+    .join("movies_theaters as mt", "mt.theater_id", "theaters.theater_id")
+    .join("movies", "movies.movie_id", "mt.movie_id")
+    .select("*")
+    .then(reduceMovies);
 }
 
 module.exports = {
-  list: asyncErrorBoundary(list),
-  readMoviesByTheaterId: asyncErrorBoundary(readMoviesByTheaterId),
+  list,
 };
